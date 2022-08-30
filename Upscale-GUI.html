@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Real-ESRGAN Upscale Helper</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+		<style>
+			body {
+				font-family: 'Roboto', Tahoma, Geneva, Verdana, sans-serif !important;
+				padding: 5px 25px;
+				display: flex;
+				flex-direction: column;
+			}
+			#output {
+				font-family: 'consolas', 'Roboto', Tahoma, Geneva, Verdana, sans-serif !important;
+				padding: 10px;
+				margin: 5px 25px 0 0;
+				border-radius: 5px;
+			}
+			#output-name {
+				padding: 10px;
+				margin: 5px 25px 0 0;
+				border-radius: 5px;
+				width: 500px;
+			}
+			.button-run {
+				background-color: #0095ff;
+				border: 1px solid transparent;
+				border-radius: 3px;
+				box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
+				box-sizing: border-box;
+				color: #fff;
+				cursor: pointer;
+				display: inline-block;
+				font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+				font-size: 13px;
+				font-weight: 400;
+				line-height: 1.15385;
+				margin: 0;
+				outline: none;
+				padding: 8px .8em;
+				position: relative;
+				text-align: center;
+				text-decoration: none;
+				user-select: none;
+				-webkit-user-select: none;
+				touch-action: manipulation;
+				vertical-align: baseline;
+				white-space: nowrap;
+			}
+
+			.button-7:hover,
+			.button-7:focus {
+				background-color: #07c;
+			}
+
+			.button-7:focus {
+				box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+			}
+
+			.button-7:active {
+				background-color: #0064bd;
+				box-shadow: none;
+			}
+		</style>
+	</head>
+	<body>
+	<script>
+		window.addEventListener('load', () => {
+		const inputImg = document.querySelector("#input-img");
+		const outputName = document.querySelector("#output-name");
+		const btnRun = document.querySelector("#run");
+		const outputElem = document.querySelector("#output");
+		const rad0 = document.querySelector("#none");
+		const rad1 = document.querySelector("#one");
+		const rad2 = document.querySelector("#two");
+		const rad3 = document.querySelector("#three");
+		const rad4 = document.querySelector("#four");
+
+		inputImg.addEventListener("change", () => {
+				outputName.value = document.forms[0][0].files[0].name;
+		});
+
+		btnRun.addEventListener("click", () => {
+				const radioVal = rad0.checked ? rad0.value : rad1.checked ? rad1.value : rad2.checked ? rad2.value : rad3.checked ? rad3.value : rad4.checked ? rad4.value : "";
+				const input = document.forms[0][0].files[0] && document.forms[0][0].files[0].name ? document.forms[0][0].files[0].name : "";
+				const output = outputName.value ? outputName.value : "";
+				const command = `realesrgan-ncnn-vulkan.exe -i inputs/${input} -o output/${output}${radioVal !== "none" ? ` -n ${radioVal}` : ""}`;
+				outputElem.value = command;
+		});
+	});
+	</script>
+	<h1>Real-ESRGAN Command Helper</h1>
+	<form>
+		<lable>Input image: </lable><input id="input-img" type="file"></input><br /><br />
+		<lable>Output name: </lable><input id="output-name" type="text"></input><br />
+
+		<p>Model Selection:</p>
+		<input type="radio" id="none" name="age" value="none">
+		<label for="none"><b>None</b> - Blurriest</label><br />
+
+		<input type="radio" id="one" name="age" value="realesrgan-x4plus" checked>
+		<label for="one"><b>realesrgan-x4plus</b> - Realistic</label><br />
+
+		<input type="radio" id="two" name="age" value="realesrnet-x4plus">
+		<label for="two"><b>realesrnet-x4plus</b></label><br />
+
+		<input type="radio" id="three" name="age" value="realesrgan-x4plus-anime">
+		<label for="three"><b>realesrgan-x4plus-anime</b> - Sharper lines</label><br />
+
+		<input type="radio" id="four" name="age" value="realesr-animevideov3">
+		<label for="four"><b>realesr-animevideov3 (animation video)</b></label><br /><br />
+
+		<div id="run" class="button-run" role="button">Compile Command</div>
+	</form>
+		<p>Output:</p>
+		<input onClick="this.setSelectionRange(0, this.value.length)" type="text" id="output" readonly />
+	</body>
+</html>
