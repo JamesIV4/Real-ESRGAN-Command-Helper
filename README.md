@@ -1,4 +1,4 @@
-# Real-ESRGAN-Command-Helper
+# Real-ESRGAN Command Helper
 
 This tool will quickly configure the command you should paste into your terminal to run Real-ESRGAN.
 
